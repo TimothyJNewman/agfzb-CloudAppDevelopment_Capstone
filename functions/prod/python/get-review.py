@@ -40,4 +40,8 @@ def main(dict):
                 if (key != "_id" and key != "_rev"):
                     result[key] = elem["doc"][key]
             results.append(result)
+            
+    if (len(results) == 0):
+        raise CloudantException("404 Error: dealerId does not exist")
+    
     return {"entries": results}
