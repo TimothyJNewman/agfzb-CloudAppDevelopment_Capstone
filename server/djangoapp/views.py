@@ -108,17 +108,18 @@ def add_review(request, dealer_id):
         elif request.method == 'POST':
             car_model = CarModel.objects.get(id=request.POST['car'])
             review = {
+                "id":1,
                 "name":request.user.first_name+" "+request.user.last_name,
                 "dealership":dealer_id,
                 "review":request.POST['content'],
-                "purchase":request.POST.get("purchase"),
+                "purchase":request.POST['purchasecheck'],
                 "purchase_date":request.POST['purchasedate'],
-                "car_make":car_model.carMake,
-                "car_type":car_model.carType,
+                "car_make":car_model.carMake.name,
+                "car_model":car_model.carType,
                 "car_year":car_model.year.strftime("%Y")
             }
             json_payload = {"review": review}
-            post_request("https://0a24c5d2.us-south.apigw.appdomain.cloud/api/review", json_payload)
+            post_request("https://c9702308.eu-gb.apigw.appdomain.cloud/api/reviews", json_payload)
             return redirect("djangoapp:dealer_details", dealer_id=dealer_id)
 
 

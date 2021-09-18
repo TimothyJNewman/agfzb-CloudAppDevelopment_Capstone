@@ -34,8 +34,8 @@ def get_request(url, api_key=None, **kwargs):
 # Create a `post_request` to make HTTP POST requests
 # e.g., response = requests.post(url, params=kwargs, json=payload)
 def post_request(url, json_payload, **kwargs):
-    print(kwargs)
-    print("GET from {} ".format(url))
+    print(json_payload)
+    print("POST to {} ".format(url))
     try:
         # Call get method of requests library with URL and parameters
         response = requests.post(url, params=kwargs, json=json_payload)
@@ -123,10 +123,11 @@ def get_dealer_reviews_from_cf(url, dealerId):
             # Get its content in `doc` object
             review_doc = review_row["doc"]
             sentiment = analyze_review_sentiments(review_doc["review"])
+            print("Sentiment:"+str(sentiment))
             # Create a DealerReview object with values in `doc` object
-            review_obj = DealerReview(another=review_doc["another"], car_make=review_doc["car_make"], car_model=review_doc["car_model"],
-                                   car_year=review_doc["car_year"], dealership=review_doc["dealership"], id=review_doc["id"],
-                                   name=review_doc["name"], purchase=review_doc["purchase"], purchase_date=review_doc["purchase_date"], 
+            review_obj = DealerReview(car_make=review_doc["car_make"], car_model=review_doc["car_model"],
+                                   car_year=review_doc["car_year"], dealership=review_doc["dealership"], name=review_doc["name"], 
+                                   purchase=review_doc["purchase"], purchase_date=review_doc["purchase_date"], 
                                    review=review_doc["review"], sentiment=sentiment)
             results.append(review_obj)
 
@@ -143,8 +144,10 @@ def analyze_review_sentiments(dealerReview):
     params["version"] = "2021-09-17"
     params["features"] = {'sentiment': True}
     params["return_analyzed_text"] = True
-    return get_request("https://api.eu-gb.natural-language-understanding.watson.cloud.ibm.com/instances/4a097744-2b43-453a-94c6-29b1deacfc7e/v1/analyze", "o_YI8dieFqKjS99jIwTxGopEN42oIHRaYpuc3zdp6-MX", **params).get("sentiment").get("document").get("label")
-
+    try:
+        returnLabel = get_request("https://api.eu-gb.natural-language-understanding.watson.cloud.ibm.com/instances/4a097744-2b43-453a-94c6-29b1deacfc7e/v1/analyze", "o_YI8dieFqKjS99jIwTxGopEN42oIHRaYpuc3zdp6-MX", **params).get("sentiment").get("document").get("label")
+    except:
+        returnLabel = "neutral"
     
 
 
