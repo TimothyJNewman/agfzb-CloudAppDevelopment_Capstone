@@ -37,14 +37,14 @@ class CarModel(models.Model):
     dealerId = models.IntegerField()
     carType = models.CharField(max_length=30, choices=CAR_TYPE_CHOICES)
     carMake = models.ForeignKey(CarMake, on_delete=models.CASCADE)
-    year = models.IntegerField()
+    year = models.DateField()
 
     def __str__(self):
         return "Name: " + self.name + "," + \
-               "Dealer ID: " + self.dealerId + "," + \
-               "Car type: " + self.carType + "," + \
-               "Car make: " + self.carMake + "," + \
-               "Year: " + self.year
+               "Dealer ID: " + str(self.dealerId) + "," + \
+               "Car type: " + str(self.carType) + "," + \
+               "Car make: " + str(self.carMake) + "," + \
+               "Year: " + str(self.year.strftime("%Y"))
 
 
 # <HINT> Create a plain Python class `CarDealer` to hold dealer data

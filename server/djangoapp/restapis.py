@@ -8,18 +8,21 @@ from requests.auth import HTTPBasicAuth
 # e.g., response = requests.get(url, params=params, headers={'Content-Type': 'application/json'},
 #                                     auth=HTTPBasicAuth('apikey', api_key))
 
-def get_request(url, apikey=None, **kwargs):
+def get_request(url, api_key=None, **kwargs):
     print(kwargs)
     print("GET from {} ".format(url))
     try:
         # Call get method of requests library with URL and parameters
         if api_key:
-        # Basic authentication GET
-            response = request.get(url, headers={'Content-Type': 'application/json'}, params=kwargs, auth=HTTPBasicAuth('apikey', apikey))
+            #response = request.get(url, headers={'Content-Type': 'application/json'}, 
+            #            auth=HTTPBasicAuth('apikey', api_key), params=kwargs)
+            #response = requests.get(url, headers={'Content-Type': 'application/json'},
+            #                        params=kwargs)
+            response = requests.get(url, params=kwargs, headers={'Content-Type': 'application/json'},
+                auth=HTTPBasicAuth('apikey', api_key))
         else:
-         # no authentication GET
-            response = request.get(url, headers={'Content-Type': 'application/json'}, params=kwargs)
-
+            response = requests.get(url, headers={'Content-Type': 'application/json'},
+                                    params=kwargs)
     except:
         # If any error occurs
         print("Network exception occurred")
@@ -39,8 +42,6 @@ def post_request(url, json_payload, **kwargs):
     except:
         # If any error occurs
         print("Network exception occurred")
-    status_code = response.status_code
-    print("With status {} ".format(status_code))
 
 # Create a get_dealers_from_cf method to get dealers from a cloud function
 # def get_dealers_from_cf(url, **kwargs):
@@ -60,8 +61,7 @@ def get_dealers_from_cf(url, **kwargs):
             # Create a CarDealer object with values in `doc` object
             dealer_obj = CarDealer(address=dealer_doc["address"], city=dealer_doc["city"], full_name=dealer_doc["full_name"],
                                    id=dealer_doc["id"], lat=dealer_doc["lat"], long=dealer_doc["long"],
-                                   short_name=dealer_doc["short_name"],
-                                   st=dealer_doc["st"], zip=dealer_doc["zip"])
+                                   short_name=dealer_doc["short_name"], st=dealer_doc["st"], zip=dealer_doc["zip"])
             results.append(dealer_obj)
 
     return results
@@ -143,7 +143,7 @@ def analyze_review_sentiments(dealerReview):
     params["version"] = "2021-09-17"
     params["features"] = {'sentiment': True}
     params["return_analyzed_text"] = True
-    return get_request("https://api.us-south.natural-language-understanding.watson.cloud.ibm.com/instances/b3f561f4-a5c4-438b-b8fd-033ea7ea3bc4/v1/analyze", "lg8Dfs6kdtBOax9QV0NFpk7jLW4JN8s_8M9NwOgtMx3W", **params).get("sentiment").get("document").get("label")
+    return get_request("https://api.eu-gb.natural-language-understanding.watson.cloud.ibm.com/instances/4a097744-2b43-453a-94c6-29b1deacfc7e/v1/analyze", "o_YI8dieFqKjS99jIwTxGopEN42oIHRaYpuc3zdp6-MX", **params).get("sentiment").get("document").get("label")
 
     
 
